@@ -8,7 +8,7 @@ var DataTable = function (fields) {
       {
         if (typeof record[fields[i]] == 'undefined' || record[fields[i]] === null)
         {
-          logError('Incomplete record given to BindTable', record);
+          logError('Incomplete record given to DataTable', record, 'missing', fields[i]);
           return 0;
         }
       }
