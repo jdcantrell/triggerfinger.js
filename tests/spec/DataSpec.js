@@ -1,7 +1,7 @@
 describe('bindTable', function () {
   var fields = ['eventName', 'selector', 'function', 'listenMethod'];
-  var record = {eventName:'click', selector: 'a', function: function () {alert('hi');}, listenMethod: 'bind'};
-  var record2 = {eventName:'mouseenter', selector: 'a', function: function () {console.log('warn')}, listenMethod: 'bind'};
+  var record = {eventName:'click', selector: 'a', fn: function () {alert('hi');}, listenMethod: 'bind'};
+  var record2 = {eventName:'mouseenter', selector: 'a', fn: function () {console.log('warn')}, listenMethod: 'bind'};
   var badRecord = {id:1, desc: 'hhhhhhiiii'};
 
   it('can add a bind record row', function () {

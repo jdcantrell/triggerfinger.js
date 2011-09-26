@@ -1,5 +1,5 @@
 var DataTable = function (fields) {
-  var table = []
+  var table = [];
 
   return {
     add: function (record) {
@@ -14,15 +14,19 @@ var DataTable = function (fields) {
       }
 
       table.push(record);
+
+      $(this).triggerHandler('add', record);
+
       return 1;
     },
     remove: function (key, value) {
-      var i = table.length;
-      var affected = 0;
+      var i = table.length, affected = 0, records = [];
       while (i--)
       {
         if (table[i][key] === value)
         {
+          records.push(table[i]);
+
           //defined in util.js, removes an item from an array and reindexes
           //we should be okay modifying the array here since we are counting
           //from array.length to 0
@@ -30,6 +34,9 @@ var DataTable = function (fields) {
           affected++;
         }
       }
+
+      $(this).triggerHandler('remove', records, key, value);
+
       return affected;
     }, 
     get: function (key, value) {
@@ -48,7 +55,14 @@ var DataTable = function (fields) {
       return table.length;
     }
   };
-}
-var BindTable = new DataTable(['eventName', 'selector', 'function', 'listenMethod']);
-var TriggerTable = new DataTable(['eventName', 'target', 'function', 'count']);
+};
+
+//setup our event data tables
+var BindTable = new DataTable(['eventName', 'selector', 'fn', 'listenMethod']);
+var TriggerTable = new DataTable(['eventName', 'target', 'fn', 'count']);
+
+
+$(BindTable).bind('add', function (event, record) {
+  console.log('Bind logged:', record.eventName, record.selector, record.listenMethod, record);
+});
 
