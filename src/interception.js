@@ -12,20 +12,21 @@ var Interception = function(options){
   var self = this,
       ns = {},
       defaults = {
-        preInterception: function () {},
-        postInterception: function () {}
+        preInterception: function (target, args) {},
+        postInterception: function (target, args, result) {}
       };
   
   options = $.extend(defaults, options);
   
   ns.intercept = function (target) {
     return function () {
+      var result;
       
-      options.preInterception(target);
+      options.preInterception(target, arguments);
       
-      result = target();
+      result = target.apply(target, arguments);
       
-      return options.postInterception(target, result);
+      return options.postInterception(target, arguments, result);
     };
   };
   
