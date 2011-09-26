@@ -8,15 +8,25 @@
   replacing it with an override. It will keep the original around for 
   reverting and for calling after the injection.
 */
-var Interception = function(target, injection){
-  var self = this;
-      ns;
+var Interception = function(options){
+  var self = this,
+      ns = {},
+      defaults = {
+        preInterception: function () {},
+        postInterception: function () {}
+      };
   
-  self.target    = target;
-  self.injection = injection;
+  options = $.extend(defaults, options);
   
-  ns.getTarget = function () {
-    return self.original;
+  ns.intercept = function (target) {
+    return function () {
+      
+      options.preInterception(target);
+      
+      result = target();
+      
+      return options.postInterception(target, result);
+    };
   };
   
   return ns;
