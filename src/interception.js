@@ -24,7 +24,7 @@ var Interception = function(options){
       
       options.preInterception(this, target, arguments);
       
-      result = target.apply(arguments);
+      result = target.apply(this, arguments);
       
       return options.postInterception(this, target, arguments, result);
     };
