@@ -3,13 +3,12 @@
 */
 
 var bindInterceptor = new Interception({
-  postInterception: function (ctx, target, args, result) {
-    a = ctx;
+  postInterception: function (ctx, targetFn, args, result) {
     var data = ctx.data();
     console.log(ctx, ctx.data('events'), args, result);
     BindTable.add({
       eventName: args[0],
-      selector: 'unknown',
+      selector: ctx.selector,
       fn: args[1],
       listenMethod: 'bind'
     });
@@ -20,11 +19,3 @@ var bindInterceptor = new Interception({
 var bindFn = jQuery.fn.bind;
 jQuery.fn.extend({bindOriginal: jQuery.fn.bind, bind: function () {}});
 jQuery.fn.extend({bind: bindInterceptor.intercept(bindFn)});
-
-var test = {};
-
-$(document).ready(function () {
-  $('#tester').bind('click', function () {
-    console.log('this is the callback');
-  });
-});
