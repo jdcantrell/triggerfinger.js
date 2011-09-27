@@ -4,7 +4,7 @@
 */
 
 /*
-  An interception is an encapulation for getting a target routine and 
+  An interception is an encapsulation for getting a target routine and 
   replacing it with an override. It will keep the original around for 
   reverting and for calling after the injection.
 */
