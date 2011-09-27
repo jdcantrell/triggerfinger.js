@@ -2,24 +2,33 @@
  Assumes jQuery is included already. Will override various event binding/triggering routines.
 */
 
-var bindCallback = function(target, args, result) {
+var bindCallback = function(ctx, target, args, result) {
+      console.log(ctx);
       BindTable.add({
         eventName: args[1],
-        selector: args[0].selector,
-        
+        selector: 'test',
+        fn: 'test',
+        listenMethod: 'test'
       });
     },
     interception = new Interception({ preInterception: bindCallback });
 
-jQuery.event.add = interception.intercept(jQuery.event.add);
+jQuery.fn.bind = interception.intercept(jQuery.fn.bind);
 
 var test = {};
 
 $(document).ready(function () {
-  $('html').bind('click', function () {
+  $('html').bind('bsevent', function () {
     console.log('this is the callback');
   });
   
-  $('html').trigger('click');
+  $('html').one('onebsevent', function () {
+    console.log('this is the callback');
+  });
   
+  $('html').live('liveevent', function () {
+    console.log('live event');
+  });
+  
+  $('html').delegate('click', 'div', function () {});
 });

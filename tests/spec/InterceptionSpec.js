@@ -8,7 +8,7 @@ describe("Interception", function() {
 		};
 		
 		interception = new Interception({
-		  postInterception: function (target, args, result) {
+		  postInterception: function (ctx, target, args, result) {
 		    return result + ' Nothing.';
 		  }
 		});
