@@ -2,6 +2,16 @@
  Assumes jQuery is included already. Will override various event binding/triggering routines.
 */
 
+var bindCallback = function(ctx, target, args, result) {
+      debugger;
+      BindTable.add({
+        eventName: args[1],
+        selector: 'test',
+        fn: 'test',
+        listenMethod: 'test'
+      });
+    },
+    interception = new Interception({ preInterception: bindCallback });
 
 var bindInterceptor = new Interception({
   postInterception: function (ctx, target, args, result) {
@@ -25,7 +35,15 @@ jQuery.fn.extend({bind: bindInterceptor.intercept(bindFn)});
 var test = {};
 
 $(document).ready(function () {
+<<<<<<< HEAD
   $('#tester').bind('testEvent', function () {
+=======
+  $('html').bind('bsevent', function () {
+    console.log('this is the callback');
+  });
+  //$('html').trigger('bsevent');
+  $('html').one('onebsevent', function () {
+>>>>>>> Committing some intermediate debugging for review.
     console.log('this is the callback');
   });
 });
