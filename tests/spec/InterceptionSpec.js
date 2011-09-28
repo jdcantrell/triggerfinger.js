@@ -15,7 +15,7 @@ describe("Interception", function() {
 		
 		targetFunction = interception.intercept(targetFunction);
 		
-		expect(targetFunction()).toEqual('Whaddup? Nothing.');
+		expect(targetFunction()).toEqual('Whaddup?');
 		
 	});
 });
