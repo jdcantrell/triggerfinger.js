@@ -4,10 +4,13 @@
 
 var bindInterceptor = new Interception({
   postInterception: function (ctx, targetFn, args, result) {
-    fn = args[args.length - 1];
+    var fn = args[args.length - 1];
+    var selector = ctx.selector !== "" ? ctx.selector : "no selector";
+
     BindTable.add({
       eventName: args[0],
-      selector: ctx.selector,
+      selector: selector,
+      items: ctx,
       fn: fn,
       guid: fn.guid,
       listenMethod: 'bind'
@@ -55,11 +58,11 @@ var TriggerTable = new DataTable(['eventName', 'target', 'fn', 'guid', 'count'])
 TriggerTable.createIndex(['eventName', 'guid']);
 
 //table debugging messages
-$(BindTable).bind('add', function (event, record) {
+$(BindTable).bindOriginal('add', function (event, record) {
   //console.log('Bind logged:', record.eventName, record.guid, record.selector, record.listenMethod, record);
 });
 
-$(TriggerTable).bind('add', function (event, record) {
+$(TriggerTable).bindOriginal('add', function (event, record) {
   //console.log('Trigger logged:', record.eventName, record.guid, record.listenMethod, record);
 });
 
