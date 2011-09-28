@@ -3,7 +3,11 @@
 */
 
 var bindInterceptor = new Interception({
+  preInterception: function () {
+    this.start = Date.now();
+  },
   postInterception: function (ctx, targetFn, args, result) {
+    var bindTime = Date.now() - this.start;
     var fn = args[args.length - 1];
     var selector = ctx.selector !== "" ? ctx.selector : "no selector";
 
@@ -12,6 +16,9 @@ var bindInterceptor = new Interception({
       selector: selector,
       items: ctx,
       fn: fn,
+      bindTime: bindTime,
+      time: Date.now(),
+      length: ctx.length,
       guid: fn.guid,
       listenMethod: 'bind'
     });
@@ -20,7 +27,13 @@ var bindInterceptor = new Interception({
 
 var triggerInterceptor = new Interception({
   postInterception: function (ctx, targetFn, args, result) {
-    var data = ctx.data();
+    try {
+      var data = ctx.data();
+    }
+    catch (exception) {
+      console.error('Could not get event handlers from', ctx, args);
+      return;
+    }
     var eventHandlers = ctx.data('events');
     if (typeof eventHandlers !== "undefined" && typeof eventHandlers[args[0]] !== 'undefined')
     {
@@ -47,8 +60,8 @@ jQuery.fn.extend({bindOriginal: jQuery.fn.bind, bind: function () {}});
 jQuery.fn.extend({bind: bindInterceptor.intercept(bindFn)});
 
 var triggerFn = jQuery.fn.trigger;
-//jQuery.fn.extend({triggerOriginal: jQuery.fn.trigger, trigger: function () {}});
-//jQuery.fn.extend({trigger: triggerInterceptor.intercept(triggerFn)});
+jQuery.fn.extend({triggerOriginal: jQuery.fn.trigger, trigger: function () {}});
+jQuery.fn.extend({trigger: triggerInterceptor.intercept(triggerFn)});
 
 //setup our event data tables
 var BindTable = new DataTable(['eventName', 'selector', 'fn', 'guid', 'listenMethod']);
