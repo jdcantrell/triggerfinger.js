@@ -23,10 +23,12 @@ var Interception = function(options){
       var result;
       
       options.preInterception(this, targetFn, arguments);
-      
+
       result = targetFn.apply(this, arguments);
-      
-      return options.postInterception(this, targetFn, arguments, result);
+
+      options.postInterception(this, targetFn, arguments, result);
+
+      return result;
     };
   };
   
