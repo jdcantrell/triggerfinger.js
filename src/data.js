@@ -120,7 +120,7 @@ var DataTable = function (fields) {
     createIndex: function (indexFields) {
       indexes.push(indexFields);
       //TODO: index all current records
-    },
+    }
   };
 };
 
