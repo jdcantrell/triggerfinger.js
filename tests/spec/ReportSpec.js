@@ -8,7 +8,9 @@ describe("Reporting", function() {
     function testFn() {
 	    expect(false).toEqual(false);
     }
-	  test.bind('blah', testFn);
+	  for (i = 0; i < 100; i++) {
+	    test.bind('blah', testFn);
+	  }
 	  
 	  test.trigger('blah');
 	  test.trigger('blah');
