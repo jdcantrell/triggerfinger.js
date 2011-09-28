@@ -123,18 +123,3 @@ var DataTable = function (fields) {
     }
   };
 };
-
-//setup our event data tables
-var BindTable = new DataTable(['eventName', 'selector', 'fn', 'guid', 'listenMethod']);
-BindTable.createIndex(['eventName', 'guid']);
-var TriggerTable = new DataTable(['eventName', 'target', 'fn', 'guid', 'count']);
-TriggerTable.createIndex(['eventName', 'guid']);
-
-$(BindTable).bind('add', function (event, record) {
-  console.log('Bind logged:', record.eventName, record.guid, record.selector, record.listenMethod, record);
-});
-
-$(TriggerTable).bind('add', function (event, record) {
-  console.log('Trigger logged:', record.eventName, record.guid, record.listenMethod, record);
-});
-
