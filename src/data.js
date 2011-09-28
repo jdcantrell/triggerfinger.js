@@ -2,8 +2,21 @@ var DataTable = function (fields) {
   var table = [];
   var indexes = [];
   var indexTables = {};
+  var _fields = [];
 
   return {
+    getFields: function () {
+      var record;
+      if (_fields.length === 0) {
+        record = table[0] ? table[0] : null;
+        if (record) {
+          for (field in record) {
+            _fields.push(field);
+          }
+        }
+      }
+      return _fields;
+    },
     add: function (record) {
       var i = fields.length;
       while (i--)
