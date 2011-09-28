@@ -20,7 +20,7 @@ function bindReport() {
     console.log( record.selector, record.eventName,record.guid, fnName,record.listenMethod);
 
     selector = record.selector != "no selector" ? record.selector : record.items;
-    if (typeof selectors[record.selector] === "undefined")
+    if (typeof selectors[selector] === "undefined")
     {
       selectors[selector] = {};
     }
@@ -35,5 +35,7 @@ function bindReport() {
   $('<div>').html(tableHead + reportRows.join("\n") + tableFooter).appendTo(document.body);
 
   console.groupEnd("Captured binds");
+
+
   console.log(selectors); 
 }
