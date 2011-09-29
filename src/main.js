@@ -81,10 +81,27 @@ $(document).ready( function () {
     padding: '5px',
     borderRadius: '3px',
     backgroundColor: 'rgb(68,68,68)',
-    opacity: '.6'
+    opacity: '.6',
+    zIndex: '10000000'
   });
-  menu.html('<a href="#" onclick="bindReport2();">View Binds</a>');
+
+  menu.html('<a href="#">View Binds</a>');
+
   menu.find('a').css({color: 'rgb(221,221,221)'});
-  console.log('here');
+  menu.find('a').click( function () {
+    var anchor = $(this);
+    if (anchor.html() === "View Binds")
+    {
+      anchor.html('Hide Binds');
+      bindReport2();
+      $('#tf-bind-report').css('zIndex', '10000000');
+    }
+    else
+    {
+      anchor.html('View Binds');
+      $('#tf-bind-report').remove();
+    }
+
+  });
   menu.appendTo(document.body)
 });
