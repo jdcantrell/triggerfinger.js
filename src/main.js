@@ -70,12 +70,21 @@ BindTable.createIndex(['eventName', 'guid']);
 var TriggerTable = new DataTable(['eventName', 'target', 'fn', 'guid', 'count']);
 TriggerTable.createIndex(['eventName', 'guid']);
 
-//table debugging messages
-$(BindTable).bindOriginal('add', function (event, record) {
-  //console.log('Bind logged:', record.eventName, record.guid, record.selector, record.listenMethod, record);
+//add ui for displaying report
+$(document).ready( function () {
+  var menu = $('<div></div>');
+  menu.attr('id', 'triggerFinger_menu');
+  menu.css({
+    position: 'absolute',
+    top: 10,
+    right: 5,
+    padding: '5px',
+    borderRadius: '3px',
+    backgroundColor: 'rgb(68,68,68)',
+    opacity: '.6'
+  });
+  menu.html('<a href="#" onclick="bindReport2();">View Binds</a>');
+  menu.find('a').css({color: 'rgb(221,221,221)'});
+  console.log('here');
+  menu.appendTo(document.body)
 });
-
-$(TriggerTable).bindOriginal('add', function (event, record) {
-  //console.log('Trigger logged:', record.eventName, record.guid, record.listenMethod, record);
-});
-
