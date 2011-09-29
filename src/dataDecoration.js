@@ -29,7 +29,8 @@ var DataDecoration = function(dataTable, options) {
       container = $('<div class="tf-data-table-container"></div>'),
       rows = [];
   
-  options = $.merge(defaults, options);
+  options = $.extend(defaults, options);
+  container.attr('id', options.id);
   
   $(window).resize(function () {
     container.center();
@@ -76,7 +77,7 @@ var DataDecoration = function(dataTable, options) {
       container.css({
         position: 'relative',
         background: '#fff',
-        width: '700px',
+        width: '80%',
         border: '1px solid #ccc',
         zIndex: 2,
         fontSize: '12px',
