@@ -21,7 +21,9 @@ var DataDecoration = function(dataTable, options) {
   var ns = {},
       self = this,
       defaults = {
-        id: 'tf-data-table'
+        id: 'tf-data-table',
+        preContent: '',
+        postContent: '',
       },
       table = $('<table class="tf-data-table"></table>'),
       container = $('<div class="tf-data-table-container"></div>'),
@@ -72,14 +74,13 @@ var DataDecoration = function(dataTable, options) {
       table.append($('<tbody></tbody>').html(rows.join('\n')));
       
       container.css({
+        position: 'relative',
         background: '#fff',
         width: '700px',
-        height: '400px',
         border: '1px solid #ccc',
         zIndex: 2,
         fontSize: '12px',
         color: '#333',
-        overflow: 'auto',
         boxShadow: '0 0 30px rgba(0,0,0,0.2), 0 0 5px rgba(0,0,0,0.2)',
         borderBottom: '1px solid #fff',
         borderTop: '1px solid #ccc',
@@ -87,7 +88,12 @@ var DataDecoration = function(dataTable, options) {
         fontFamily: 'menlo, monospace'
       });
       
-      container.append(table).appendTo(document.body);
+      var tableWrapper = $('<div class="tf-table-wrapper"></div>').css({
+        overflow: 'auto',
+        height: '400px'
+      });
+      
+      container.append(tableWrapper.append(table)).appendTo(document.body);
       
       table.css({
         width: '100%',
@@ -110,6 +116,27 @@ var DataDecoration = function(dataTable, options) {
         background: '#fafafa'
       });
       
+      table.before('<a href="#" class="tf-close">close</a>');
+      
+      this.closeButton = container.find('.tf-close');
+      this.closeButton.css({
+        background: '#000',
+        color: '#fafafa',
+        display: 'block',
+        padding: '5px',
+        textAlign: 'center',
+        position: 'absolute',
+        top: '-25px',
+        right: 0
+      });
+      this.closeButton.click(function (e) {
+        ns.destroy();
+        e.preventDefault();
+      });
+      
+      table.before(options.preContent);
+      table.after(options.postContent);
+      
       ns.show();
       container.center();
     }
@@ -124,7 +151,7 @@ var DataDecoration = function(dataTable, options) {
   };
   
   ns.destroy = function () {
-    table.remove();
+    container.remove();
   };
   
   return ns;
