@@ -3,6 +3,7 @@ var DataTable = function (fields) {
   var indexes = [];
   var indexTables = {};
   var _fields = [];
+  var unique = 0;
 
   return {
     getFields: function () {
@@ -52,6 +53,9 @@ var DataTable = function (fields) {
         }
         indexTable.push(record);
       }
+
+      record._uid = unique;
+      unique += 1;
 
       $(this).triggerHandler('add', record);
 
