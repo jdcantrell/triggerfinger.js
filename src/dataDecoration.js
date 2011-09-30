@@ -76,7 +76,7 @@ var DataDecoration = function(dataTable, options) {
       
       container.css({
         position: 'relative',
-        background: '#fff',
+        background: '#fafafa',
         width: '80%',
         border: '1px solid #ccc',
         zIndex: 2,
@@ -86,6 +86,7 @@ var DataDecoration = function(dataTable, options) {
         borderBottom: '1px solid #fff',
         borderTop: '1px solid #ccc',
         borderLeft: '1px solid #ccc',
+        borderRadius: '5px',
         fontFamily: 'menlo, monospace'
       });
       
@@ -102,6 +103,12 @@ var DataDecoration = function(dataTable, options) {
         textAlign: 'left',
         borderCollapse: 'collapse'
       });
+      headerTable.find('th').first().css({
+        borderTopLeftRadius: '5px'
+      });
+      headerTable.find('th').last().css({
+        borderTopRightRadius: '5px'
+      });
       container.append(headerTable);
       container.append(tableWrapper.append(table)).appendTo(document.body);
       
@@ -109,11 +116,14 @@ var DataDecoration = function(dataTable, options) {
       if (options.summaryHTML)
       {
         var summary = $('<div>');
-        console.log(options.summaryHTML, options);
+        var hr = $('<hr>');
+        hr.css({width: '95%'});
+        summary.css({width: '95%', margin: 'auto',fontSize: '12px'});
         summary.html(options.summaryHTML);
-        console.log(summary);
-        a = summary;
 
+
+
+        container.append(hr);
         container.append(summary);
       }
       
@@ -121,7 +131,7 @@ var DataDecoration = function(dataTable, options) {
         width: '100%',
         textAlign: 'left',
         borderCollapse: 'collapse',
-        marginTop: '-24px'
+        marginTop: '-25px'
       }).attr('cellspacing', 0).attr('cellpadding', 0).attr('border', 0);
       
       table.find('tbody').css({
@@ -143,12 +153,14 @@ var DataDecoration = function(dataTable, options) {
       
       this.closeButton = container.find('.tf-close');
       this.closeButton.css({
-        background: '#000',
+        background: '#444',
         color: '#fafafa',
         display: 'block',
         padding: '5px',
         textAlign: 'center',
         position: 'absolute',
+        borderRadius:'8px',
+        textDecoration: 'none',
         top: '-25px',
         right: 0
       });
