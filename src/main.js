@@ -29,6 +29,9 @@ var bindInterceptor = new Interception({
 });
 
 var triggerInterceptor = new Interception({
+  preInterception: function (ctx, targetFn, args) {
+    this.start = Date.now();
+  },
   postInterception: function (ctx, targetFn, args, result) {
     try {
       var data = ctx.data();
@@ -51,7 +54,8 @@ var triggerInterceptor = new Interception({
           fn: eventHandlers[args[0]][i].handler,
           guid: eventHandlers[args[0]][i].guid,
           bindGuid: eventHandlers[args[0]][i].handler.bindGuid,
-          count: 1
+          count: 1,
+          runTime: Date.now() - this.start
         });
       }
     }
