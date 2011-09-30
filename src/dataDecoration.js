@@ -94,12 +94,34 @@ var DataDecoration = function(dataTable, options) {
         height: '400px'
       });
       
+      var headers = table.find('thead').clone();
+      var headerTable = $('<table width="100%">');
+      headerTable.append(headers);
+      headerTable.css({
+        width: '100%',
+        textAlign: 'left',
+        borderCollapse: 'collapse'
+      });
+      container.append(headerTable);
       container.append(tableWrapper.append(table)).appendTo(document.body);
+      
+      
+      if (options.summaryHTML)
+      {
+        var summary = $('<div>');
+        console.log(options.summaryHTML, options);
+        summary.html(options.summaryHTML);
+        console.log(summary);
+        a = summary;
+
+        container.append(summary);
+      }
       
       table.css({
         width: '100%',
         textAlign: 'left',
-        borderCollapse: 'collapse'
+        borderCollapse: 'collapse',
+        marginTop: '-24px'
       }).attr('cellspacing', 0).attr('cellpadding', 0).attr('border', 0);
       
       table.find('tbody').css({
@@ -139,6 +161,23 @@ var DataDecoration = function(dataTable, options) {
       table.after(options.postContent);
       
       ns.show();
+
+      //fix the widths on our fixed header
+      var widths = [];
+      table.find('th').each(function (idx, el) {
+        widths[idx] = $(el).width();
+      });
+      headerTable.find('th').each( function (idx, el) {
+        $(el).width(widths[idx]);
+        $(el).css({
+          background: '#444',
+          color: '#ddd',
+          padding: '5px'
+        })
+      });
+      
+      table.find('th').height(1);
+
       container.center();
     }
   };
