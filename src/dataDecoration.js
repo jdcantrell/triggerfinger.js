@@ -23,7 +23,7 @@ var DataDecoration = function(dataTable, options) {
       defaults = {
         id: 'tf-data-table',
         preContent: '',
-        postContent: '',
+        postContent: ''
       },
       table = $('<table class="tf-data-table"></table>'),
       container = $('<div class="tf-data-table-container"></div>'),
@@ -32,7 +32,7 @@ var DataDecoration = function(dataTable, options) {
   options = $.extend(defaults, options);
   container.attr('id', options.id);
   
-  $(window).resize(function () {
+  $(window).bindOriginal('resize', function () {
     container.center();
   });
   
@@ -79,7 +79,7 @@ var DataDecoration = function(dataTable, options) {
         background: '#fafafa',
         width: '80%',
         border: '1px solid #ccc',
-        zIndex: 2,
+        zIndex: 1000000,
         fontSize: '12px',
         color: '#333',
         boxShadow: '0 0 30px rgba(0,0,0,0.2), 0 0 5px rgba(0,0,0,0.2)',
@@ -96,7 +96,7 @@ var DataDecoration = function(dataTable, options) {
       });
       
       var headers = table.find('thead').clone();
-      var headerTable = $('<table width="100%">');
+      var headerTable = $('<table class="tf-click-header" width="100%">');
       headerTable.append(headers);
       headerTable.css({
         width: '100%',
@@ -112,6 +112,12 @@ var DataDecoration = function(dataTable, options) {
       container.append(headerTable);
       container.append(tableWrapper.append(table)).appendTo(document.body);
       
+      table.find('tr').bindOriginal('mouseenter', function () {
+        $(this).find('td').css({'backgroundColor': '#eeeeff'});
+      });
+      table.find('tr').bindOriginal('mouseleave', function () {
+        $(this).find('td').css({'backgroundColor': ''});
+      });
       
       if (options.summaryHTML)
       {
@@ -121,8 +127,6 @@ var DataDecoration = function(dataTable, options) {
         summary.css({width: '95%', margin: 'auto',fontSize: '12px'});
         summary.html(options.summaryHTML);
 
-
-
         container.append(hr);
         container.append(summary);
       }
@@ -131,7 +135,7 @@ var DataDecoration = function(dataTable, options) {
         width: '100%',
         textAlign: 'left',
         borderCollapse: 'collapse',
-        marginTop: '-25px'
+        marginTop: (0 - headerTable.height()) + 'px'
       }).attr('cellspacing', 0).attr('cellpadding', 0).attr('border', 0);
       
       table.find('tbody').css({
@@ -164,7 +168,7 @@ var DataDecoration = function(dataTable, options) {
         top: '-25px',
         right: 0
       });
-      this.closeButton.click(function (e) {
+      this.closeButton.bindOriginal('click', function (e) {
         ns.destroy();
         e.preventDefault();
       });
@@ -187,6 +191,7 @@ var DataDecoration = function(dataTable, options) {
           padding: '5px'
         })
       });
+      table.css({'marginTop': (0 - headerTable.height()) + 'px' });
       
       table.find('th').height(1);
 
