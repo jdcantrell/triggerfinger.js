@@ -42,7 +42,36 @@ function getSelectorName(record) {
   return selector;
 }
 
-function bindReport() {
+function sortTable(table, field, sortFn) {
+  var sortValues = [];
+  var sortData = {};
+  //collect sort values
+  table.each(function (i, record) {
+    if (typeof sortData[record[field]] === "undefined") 
+    {
+      sortValues.push(record[field]);
+      sortData[record[field]] = [];
+    }
+    sortData[record[field]].push(record);
+  });
+
+  table.removeAll();
+  sortValues.sort(sortFn);
+
+  //reorder sort
+  var i = 0;
+  for (i = 0; i < sortValues.length; i += 1) 
+  { 
+    var data = sortData[sortValues[i]];
+    for (j = 0; j < data.length; j += 1)
+    {
+      table.add(data[j]);
+    }
+  }
+  return table;
+}
+
+function bindReport(sort) {
   var previousBindTime = 0, maxTime = 0, minTime = Date.now(), runTime = 0, bindCount = 0,
       itemCount = 0, reportRows = {}, selectors = {};
 
@@ -54,9 +83,10 @@ function bindReport() {
       'Event': record.eventName,
       'Selector': getSelectorName(record) + '<a class="tf-view-selector" href="#">(view)</a>',
       'Function': getFnName(record) + '<a class="tf-view-function" href="#">(view)</a>',
-      'Bind Time': record.bindTime + 'ms',
+     // 'Bind Time': record.bindTime + 'ms',
       'Items Bound': record.length,
       'Fired': 0,
+      'Trigger Time':  0,
       'Bind Gap': previousBindTime != 0 ? (record.time - previousBindTime) + 'ms' : ' - '
     };
 
@@ -66,8 +96,15 @@ function bindReport() {
     {
       if (record.items.has(triggers[i].item)) {
         rec['Fired'] += 1;
+        rec['Trigger Time'] += triggers[i].runTime;
       }
     }
+    if (rec['Fired'] !== 0)
+    {
+      rec['Trigger Time'] = Math.round(100 * rec['Trigger Time'] / rec['Fired']) / 100;
+    }
+    rec['Trigger Time'] += 'ms';
+
 
     reportTable.add(rec);
     previousBindTime = record.time;
@@ -77,6 +114,24 @@ function bindReport() {
     bindCount++;
     itemCount += record.length;
   });
+
+
+  if (typeof sort !== 'undefined')
+  {
+    var sortFn;
+    switch (sort) {
+      case 'Items Bound':
+      case 'Fired':
+      case 'Trigger Time':
+      case 'Bind Gap':
+        sortFn = function (a ,b) { return parseFloat(b) - parseFloat(a); };
+        break;
+      case '_uid':
+        sortFn = function (a ,b) { return parseFloat(a) - parseFloat(b); };
+        break;
+    }
+    sortTable(reportTable, sort, sortFn);
+  }
 
   var summaryRow1 = [];
   var summaryRow2 = [];
@@ -90,6 +145,11 @@ function bindReport() {
     summaryHTML: '<table width="100%"><tr><td>' + summaryRow1.join('</td><td>') + '</td></tr><tr><td>' + summaryRow2.join('</td><td>') + '</td></tr></table>' 
   });
   bindTableDecoration.render();
+
+  $('.tf-click-header').find('th').bindOriginal('click', function () {
+    $('#tf-bind-report').remove();
+    bindReport($(this).html());
+  });
 
   $('#tf-bind-report').find('a').bindOriginal('click', function () {
     var anchor = $(this);
