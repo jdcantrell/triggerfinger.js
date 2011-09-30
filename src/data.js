@@ -54,12 +54,18 @@ var DataTable = function (fields) {
         indexTable.push(record);
       }
 
-      record._uid = unique;
-      unique += 1;
+      if (typeof record._uid === "undefined")
+      {
+        record._uid = unique;
+        unique += 1;
+      }
 
       $(this).triggerHandler('add', record);
 
       return 1;
+    },
+    removeAll: function () {
+      table = [];
     },
     remove: function (key, value) {
       var i = table.length, affected = 0, records = [];
