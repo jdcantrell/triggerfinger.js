@@ -13,14 +13,13 @@ describe("Reporting", function() {
 	  }
 	  
 	  test.trigger('blah');
-	  test.trigger('blah');
 	});
 	
 	it("records when bind is used", function () {
-	  expect(BindTable.count()).toEqual(2);
+	  expect(BindTable.count()).toEqual(102);
 	});
 
 	it("records when trigger is used", function () {
-	  expect(TriggerTable.count()).toEqual(4);
+	  expect(TriggerTable.count()).toEqual(101);
 	});
 });
