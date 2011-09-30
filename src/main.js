@@ -33,32 +33,30 @@ var triggerInterceptor = new Interception({
     this.start = Date.now();
   },
   postInterception: function (ctx, targetFn, args, result) {
-    try {
-      var data = ctx.data();
-    }
-    catch (exception) {
-      console.error('Could not get event handlers from', ctx, args);
-      return;
-    }
-    var eventHandlers = ctx.data('events');
-    if (typeof eventHandlers !== "undefined" && typeof eventHandlers[args[0]] !== 'undefined')
-    {
-      var i = eventHandlers[args[0]].length;
+    var event = args[0];
 
-      while (i--)
+    //grabbed from jquery event.handle
+		var handlers = ((jQuery.data( ctx, "events" ) || {})[ event.type ] || []).slice(0),
+			run_all = !event.exclusive && !event.namespace,
+			args = Array.prototype.slice.call( arguments, 0 );
+
+		for ( var j = 0, l = handlers.length; j < l; j++ ) {
+			var handleObj = handlers[ j ];
+      
+      if (typeof handleObj !== "undefined")
       {
         TriggerTable.add({
-          eventName: args[0],
-          selector: ctx.selector,
-          target: ctx[0],
-          fn: eventHandlers[args[0]][i].handler,
-          guid: eventHandlers[args[0]][i].guid,
-          bindGuid: eventHandlers[args[0]][i].handler.bindGuid,
+          eventName: event.type,
+          target: ctx,
+          fn: handleObj,
+          guid: handleObj.guid,
+          bindGuid: handleObj.handler.bindGuid,
           count: 1,
           runTime: Date.now() - this.start
         });
       }
     }
+
   }
 });
 
@@ -67,9 +65,8 @@ var bindFn = jQuery.fn.bind;
 jQuery.fn.extend({bindOriginal: jQuery.fn.bind, bind: function () {}});
 jQuery.fn.extend({bind: bindInterceptor.intercept(bindFn)});
 
-var triggerFn = jQuery.fn.trigger;
-jQuery.fn.extend({triggerOriginal: jQuery.fn.trigger, trigger: function () {}});
-jQuery.fn.extend({trigger: triggerInterceptor.intercept(triggerFn)});
+var eventTriggerFn = jQuery.event.handle;
+jQuery.event.handle = triggerInterceptor.intercept(jQuery.event.handle);
 
 //setup our event data tables
 var BindTable = new DataTable(['eventName', 'selector', 'fn', 'guid', 'listenMethod']);
@@ -96,13 +93,13 @@ $(document).ready( function () {
   menu.html('<a href="#">View Binds</a>');
 
   menu.find('a').css({color: 'rgb(221,221,221)'});
-  menu.find('a').click( function () {
+  menu.find('a').bindOriginal('click', function () {
     var anchor = $(this);
-    if (anchor.html() === "View Binds")
+
+    if ($('#tf-bind-report').length === 0)
     {
       anchor.html('Hide Binds');
       bindReport();
-      $('#tf-bind-report').css('zIndex', '10000000');
     }
     else
     {
