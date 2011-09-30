@@ -82,8 +82,8 @@ function bindReport() {
   var summaryRow2 = [];
   summaryRow1.push('Total Binds: ' + bindCount);
   summaryRow1.push('Items Bounded:' + itemCount);
-  summaryRow2.push('Time for all Binds: ' + (maxTime - minTime));
-  summaryRow2.push('Time to Bind:' + runTime);
+  summaryRow2.push('Time for all Binds: ' + (maxTime - minTime) + 'ms');
+  summaryRow2.push('Time to Bind:' + runTime + 'ms');
   
   var bindTableDecoration = new DataDecoration(reportTable, {
     id: 'tf-bind-report',
