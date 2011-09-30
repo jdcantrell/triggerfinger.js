@@ -3,14 +3,17 @@
 */
 
 var bindInterceptor = new Interception({
-  preInterception: function () {
+  guid: 0,
+  preInterception: function (ctx, targetFn, args) {
+    this.guid += 1;
     this.start = Date.now();
+    args[args.length -1].bindGuid = this.guid;
   },
   postInterception: function (ctx, targetFn, args, result) {
     var bindTime = Date.now() - this.start;
     var fn = args[args.length - 1];
     var selector = ctx.selector !== "" ? ctx.selector : "no selector";
-
+    
     BindTable.add({
       eventName: args[0],
       selector: selector,
@@ -19,7 +22,7 @@ var bindInterceptor = new Interception({
       bindTime: bindTime,
       time: Date.now(),
       length: ctx.length,
-      guid: fn.guid,
+      guid: this.guid,
       listenMethod: 'bind'
     });
   }
@@ -47,6 +50,7 @@ var triggerInterceptor = new Interception({
           target: ctx[0],
           fn: eventHandlers[args[0]][i].handler,
           guid: eventHandlers[args[0]][i].guid,
+          bindGuid: eventHandlers[args[0]][i].handler.bindGuid,
           count: 1
         });
       }
@@ -93,7 +97,7 @@ $(document).ready( function () {
     if (anchor.html() === "View Binds")
     {
       anchor.html('Hide Binds');
-      bindReport2();
+      bindReport();
       $('#tf-bind-report').css('zIndex', '10000000');
     }
     else
