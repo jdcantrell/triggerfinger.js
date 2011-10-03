@@ -11,7 +11,18 @@ $(document).ready(function () {
       }
       test.trigger('customEvent');
       eventCounts = {'click': 0, mouseMove: 0, mouseLeave: 0}
-      test.click(function () {eventCounts.click += 1});
+
+      function fast() {};
+      function slow() {
+        var j = 0;
+        for(var i = 0; i < 10000000; i++)
+        {
+          j += i * i;
+        }
+      };
+
+      test.click(fast);
+      test.click(slow);
       test.mousemove(function () {eventCounts.mouseMove += 1});
       test.mouseleave(function () {eventCounts.mouseLeave += 1});
 
@@ -19,11 +30,11 @@ $(document).ready(function () {
     });
     
     it("records when bind is used", function () {
-      expect(BindTable.count()).toEqual(4);
+      expect(BindTable.count()).toEqual(5);
     });
 
     it("records when trigger is used", function () {
-      expect(TriggerTable.count()).toEqual(2);
+      expect(TriggerTable.count()).toEqual(3);
     });
 
 
