@@ -77,7 +77,7 @@ var DataDecoration = function(dataTable, options) {
       container.css({
         position: 'relative',
         background: '#fafafa',
-        width: '80%',
+        width: '88%',
         border: '1px solid #ccc',
         zIndex: 1000000,
         fontSize: '12px',
@@ -101,8 +101,10 @@ var DataDecoration = function(dataTable, options) {
       headerTable.css({
         width: '100%',
         textAlign: 'left',
-        borderCollapse: 'collapse'
+        borderCollapse: 'collapse',
+        whiteSpace: 'nowrap'
       });
+      table.find('thead').css({'whiteSpace': 'nowrap'});
       headerTable.find('th').first().css({
         borderTopLeftRadius: '5px'
       });
@@ -113,7 +115,7 @@ var DataDecoration = function(dataTable, options) {
       container.append(tableWrapper.append(table)).appendTo(document.body);
       
       table.find('tr').bindOriginal('mouseenter', function () {
-        $(this).find('td').css({'backgroundColor': '#eeeeff'});
+        $(this).find('td').css({'backgroundColor': '#ddf'});
       });
       table.find('tr').bindOriginal('mouseleave', function () {
         $(this).find('td').css({'backgroundColor': ''});
